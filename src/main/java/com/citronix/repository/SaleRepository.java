@@ -1,4 +1,7 @@
 package com.citronix.repository;
 
-public class SaleRepository {
+import com.citronix.entity.Sale;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SaleRepository extends JpaRepository<Sale, Long> {
 }
