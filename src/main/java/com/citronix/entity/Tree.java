@@ -34,4 +34,5 @@ public class Tree {
 
     @OneToMany(mappedBy = "tree", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<HarvestDetail> harvestDetails;
+
 }
