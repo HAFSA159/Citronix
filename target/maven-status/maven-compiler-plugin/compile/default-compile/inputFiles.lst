@@ -5,6 +5,7 @@ C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\controller\HarvestC
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\entity\Field.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\exception\GlobalExceptionHandler.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\dto\response\FarmResponse.java
+C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\dto\response\HarvestDetailResponse.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\mapper\SaleMapper.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\interfaces\FarmService.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\controller\SaleController.java

@@ -25,14 +25,13 @@ public class Tree {
     @Column(name = "planting_date", nullable = false)
     private LocalDate plantingDate;
 
-    @Column(name = "is_productive")
+    @Column(name = "is_productive", nullable = false)
     private boolean isProductive;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "field_id", nullable = false)
     private Field field;
 
     @OneToMany(mappedBy = "tree", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<HarvestDetail> harvestDetails;
-
 }

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-
 @Entity
 @Data
 @Builder
@@ -24,12 +23,11 @@ public class HarvestDetail {
     @Column(nullable = false)
     private Double quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "harvest_id", nullable = false)
     private Harvest harvest;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tree_id", nullable = false)
     private Tree tree;
 }
-

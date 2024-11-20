@@ -33,6 +33,7 @@ com\citronix\service\impl\SaleServiceImpl.class
 com\citronix\entity\Sale.class
 com\citronix\entity\Harvest.class
 com\citronix\service\interfaces\HarvestService.class
+com\citronix\dto\response\HarvestDetailResponse.class
 com\citronix\dto\request\HarvestRequest.class
 com\citronix\CitronixApplication.class
 com\citronix\mapper\SaleMapper.class

@@ -23,17 +23,19 @@ public class FieldController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping
+    public ResponseEntity<List<FieldResponse>> getAllFields() {
+        List<FieldResponse> fields = fieldService.getAllFields();
+        return ResponseEntity.ok(fields);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<FieldResponse> getField(@PathVariable Long id) {
         FieldResponse response = fieldService.getFieldById(id);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<List<FieldResponse>> getAllFields() {
-        List<FieldResponse> fields = fieldService.getAllFields();
-        return ResponseEntity.ok(fields);
-    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<FieldResponse> updateField(@PathVariable Long id, @Valid @RequestBody FieldRequest request) {
