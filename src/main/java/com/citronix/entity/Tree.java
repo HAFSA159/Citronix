@@ -25,9 +25,6 @@ public class Tree {
     @Column(name = "planting_date", nullable = false)
     private LocalDate plantingDate;
 
-    @Column(name = "is_productive", nullable = false)
-    private boolean isProductive;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "field_id", nullable = false)
     private Field field;

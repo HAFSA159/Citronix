@@ -32,7 +32,7 @@ public class TreeServiceImpl implements TreeService {
         Field field = fieldRepository.findById(treeRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
-        Tree tree = new Tree(null, treeRequest.getPlantingDate(), treeRequest.isProductive(), field, null);
+        Tree tree = new Tree(null, treeRequest.getPlantingDate(), field, null);
 
         tree = treeRepository.save(tree);
 
@@ -62,7 +62,6 @@ public class TreeServiceImpl implements TreeService {
         Tree tree = treeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tree not found"));
         tree.setPlantingDate(treeRequest.getPlantingDate());
-        tree.setProductive(treeRequest.isProductive());
         Field field = fieldRepository.findById(treeRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
         tree.setField(field);
@@ -95,16 +94,27 @@ public class TreeServiceImpl implements TreeService {
         return Period.between(plantingDate, currentDate).getYears();
     }
 
+    private double calculateAnnualProductivity(int age) {
+        if (age < 3) {
+            return 2.5 * 4;
+        } else if (age <= 10) {
+            return 12.0 * 4;
+        } else {
+            return 20.0 * 4;
+        }
+    }
+
+
 
     @Override
     public TreeResponse mapToResponse(Tree tree) {
         int age = calculateAge(tree.getPlantingDate());
+        double productivity = calculateAnnualProductivity(age);
         return new TreeResponse(
                 tree.getId(),
                 tree.getPlantingDate(),
-                tree.isProductive(),
                 age,
-                null
+                productivity
         );
     }
 

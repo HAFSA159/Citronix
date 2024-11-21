@@ -13,15 +13,14 @@ import java.util.List;
 public class TreeResponse {
     private Long id;
     private LocalDate plantingDate;
-    private boolean isProductive;
     private int age;
-    private List<HarvestDetailResponse> harvestDetails;
+    private double annualProductivity;
+
 
     public TreeResponse(Long id) {
         this.id = id;
         this.plantingDate = null;
-        this.isProductive = false;
-        this.harvestDetails = null;
         this.age = 0;
+        this.annualProductivity = 0;
     }
 }

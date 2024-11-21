@@ -8,7 +8,5 @@ import java.time.LocalDate;
 public class TreeRequest {
     private Long fieldId;
     private LocalDate plantingDate;
-    private boolean isProductive;
-
 
 }
