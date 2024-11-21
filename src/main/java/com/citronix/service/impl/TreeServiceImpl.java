@@ -10,6 +10,8 @@ import com.citronix.service.interfaces.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,10 +31,14 @@ public class TreeServiceImpl implements TreeService {
     public TreeResponse createTree(TreeRequest treeRequest) {
         Field field = fieldRepository.findById(treeRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
+
         Tree tree = new Tree(null, treeRequest.getPlantingDate(), treeRequest.isProductive(), field, null);
+
         tree = treeRepository.save(tree);
+
         return mapToResponse(tree);
     }
+
 
 
     @Override
@@ -73,13 +79,34 @@ public class TreeServiceImpl implements TreeService {
         return false;
     }
 
+    public int calculateTreeAge(Long treeId) {
+        Tree tree = treeRepository.findById(treeId)
+                .orElseThrow(() -> new RuntimeException("Tree not found"));
+
+        return calculateAge(tree.getPlantingDate());
+    }
+
+    private int calculateAge(LocalDate plantingDate) {
+        if (plantingDate == null) {
+            return 0;
+        }
+        LocalDate currentDate = LocalDate.now();
+
+        return Period.between(plantingDate, currentDate).getYears();
+    }
+
+
     @Override
     public TreeResponse mapToResponse(Tree tree) {
+        int age = calculateAge(tree.getPlantingDate());
         return new TreeResponse(
                 tree.getId(),
                 tree.getPlantingDate(),
                 tree.isProductive(),
+                age,
                 null
         );
     }
+
+
 }

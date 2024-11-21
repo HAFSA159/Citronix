@@ -10,11 +10,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class TreeResponse {
     private Long id;
     private LocalDate plantingDate;
     private boolean isProductive;
+    private int age;
     private List<HarvestDetailResponse> harvestDetails;
 
     public TreeResponse(Long id) {
@@ -22,5 +22,6 @@ public class TreeResponse {
         this.plantingDate = null;
         this.isProductive = false;
         this.harvestDetails = null;
+        this.age = 0;
     }
 }
