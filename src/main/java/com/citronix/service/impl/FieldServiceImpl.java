@@ -33,6 +33,13 @@ public class FieldServiceImpl implements FieldService {
         Farm farm = farmRepository.findById(request.getFarmId())
                 .orElseThrow(() -> new RuntimeException("Farm with ID " + request.getFarmId() + " not found"));
 
+        double currentFieldArea = fieldRepository.sumFieldAreaByFarmId(farm.getId());
+        double maxAllowedArea = farm.getArea() * 0.5;
+
+        if (currentFieldArea + request.getArea() > maxAllowedArea) {
+            throw new RuntimeException("Adding this field would exceed the maximum allowed area for fields on this farm (" + maxAllowedArea + " units).");
+        }
+
         Field field = Field.builder()
                 .area(request.getArea())
                 .farm(farm)
@@ -41,6 +48,8 @@ public class FieldServiceImpl implements FieldService {
         Field savedField = fieldRepository.save(field);
         return mapToResponse(savedField);
     }
+
+
 
     @Override
     public FieldResponse getFieldById(Long id) {

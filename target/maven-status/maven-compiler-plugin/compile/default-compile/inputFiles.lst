@@ -1,3 +1,4 @@
+C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\impl\HarvestDetailServiceImpl.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\entity\enums\TreeStatus.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\entity\HarvestDetail.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\dto\request\HarvestRequest.java
@@ -9,9 +10,11 @@ C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\dto\response\Harves
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\mapper\SaleMapper.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\interfaces\FarmService.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\controller\SaleController.java
+C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\repository\HarvestDetailRepository.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\impl\FieldServiceImpl.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\mapper\FarmMapper.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\interfaces\TreeService.java
+C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\interfaces\HarvestDetailService.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\controller\FarmController.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\controller\TreeController.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\config\SwaggerConfig.java
@@ -31,6 +34,7 @@ C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\repository\FieldRep
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\repository\SaleRepository.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\dto\response\FieldResponse.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\entity\Sale.java
+C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\dto\request\HarvestDetailRequest.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\interfaces\SaleService.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\exception\BusinessException.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\entity\Tree.java
@@ -43,6 +47,7 @@ C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\dto\request\TreeReq
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\mapper\HarvestMapper.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\util\ValidationUtil.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\entity\Farm.java
+C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\controller\HarvestDetailController.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\interfaces\HarvestService.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\impl\FarmServiceImpl.java
 C:\Users\YouCode\Desktop\citronix\src\main\java\com\citronix\service\impl\SaleServiceImpl.java

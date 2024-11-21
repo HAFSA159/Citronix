@@ -1,11 +1,14 @@
 com\citronix\config\SwaggerConfig.class
 com\citronix\dto\request\TreeRequest.class
 com\citronix\service\impl\TreeServiceImpl.class
+com\citronix\dto\request\HarvestDetailRequest.class
 com\citronix\repository\FarmRepository.class
 com\citronix\dto\response\FieldResponse.class
 com\citronix\entity\Tree$TreeBuilder.class
 com\citronix\controller\SaleController.class
 com\citronix\service\interfaces\FieldService.class
+com\citronix\repository\HarvestDetailRepository.class
+com\citronix\service\interfaces\HarvestDetailService.class
 com\citronix\repository\TreeRepository.class
 com\citronix\controller\FarmController.class
 com\citronix\entity\enums\TreeStatus.class
@@ -14,9 +17,11 @@ com\citronix\entity\Sale$SaleBuilder.class
 com\citronix\repository\SaleRepository.class
 com\citronix\dto\request\FieldRequest.class
 com\citronix\repository\HarvestRepository.class
+com\citronix\dto\response\HarvestDetailResponse$HarvestDetailResponseBuilder.class
 com\citronix\dto\response\TreeResponse.class
 com\citronix\util\ValidationUtil.class
 com\citronix\mapper\TreeMapper.class
+com\citronix\dto\response\SaleResponse$SaleResponseBuilder.class
 com\citronix\exception\BusinessException.class
 com\citronix\service\interfaces\SaleService.class
 com\citronix\entity\Field$FieldBuilder.class
@@ -39,6 +44,7 @@ com\citronix\CitronixApplication.class
 com\citronix\mapper\SaleMapper.class
 com\citronix\exception\ResourceNotFoundException.class
 com\citronix\service\impl\FieldServiceImpl.class
+com\citronix\service\impl\HarvestDetailServiceImpl.class
 com\citronix\service\interfaces\TreeService.class
 com\citronix\entity\HarvestDetail$HarvestDetailBuilder.class
 com\citronix\dto\request\SaleRequest.class
@@ -51,6 +57,7 @@ com\citronix\service\impl\HarvestServiceImpl.class
 com\citronix\entity\HarvestDetail.class
 com\citronix\mapper\HarvestMapper.class
 com\citronix\service\impl\FarmServiceImpl.class
+com\citronix\controller\HarvestDetailController.class
 com\citronix\dto\request\FarmRequest.class
 com\citronix\dto\response\FarmResponse.class
 com\citronix\exception\GlobalExceptionHandler.class
