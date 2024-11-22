@@ -36,10 +36,10 @@ public class TreeServiceImpl implements TreeService {
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
         Tree tree = treeMapper.toEntity(treeRequest);
-        tree.setField(field);  // Ensure field is set
+        tree.setField(field);
         Tree savedTree = treeRepository.save(tree);
 
-        return setTreeMetricsAndMapToResponse(savedTree);  // Set metrics and return response
+        return setTreeMetricsAndMapToResponse(savedTree);
     }
 
     @Override
@@ -102,10 +102,9 @@ public class TreeServiceImpl implements TreeService {
         int age = calculateAge(tree.getPlantingDate());
         double annualProductivity = calculateAnnualProductivity(age);
 
-        // Map Tree to TreeResponse using TreeMapper, then set additional fields
         TreeResponse response = treeMapper.toDTO(tree);
-        response.setAge(age);  // Set calculated age
-        response.setAnnualProductivity(annualProductivity);  // Set calculated productivity
+        response.setAge(age);
+        response.setAnnualProductivity(annualProductivity);
 
         return response;
     }

@@ -3,6 +3,7 @@ package com.citronix.dto.response;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -12,7 +13,6 @@ public class FieldResponse {
     private Double area;
     private Long farmId;
     private List<TreeResponse> trees;
-    private List<Long> harvestIds;
 
     public FieldResponse(Long id, Double area, Long farmId, List<TreeResponse> trees) {
         this.id = id;

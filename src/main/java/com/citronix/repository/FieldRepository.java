@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface FieldRepository extends JpaRepository<Field, Long> {
     @Query("SELECT COALESCE(SUM(f.area), 0) FROM Field f WHERE f.farm.id = :farmId")
     double sumFieldAreaByFarmId(@Param("farmId") Long farmId);
+    long countByFarmId(Long farmId);
+
 }

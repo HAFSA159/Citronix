@@ -39,6 +39,7 @@ import java.util.List;
         @JoinColumn(name = "field_id", nullable = false)
         private Field field;
 
+
         @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<HarvestDetail> harvestDetails;
 

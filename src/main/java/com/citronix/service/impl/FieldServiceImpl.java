@@ -2,17 +2,15 @@ package com.citronix.service.impl;
 
 import com.citronix.dto.request.FieldRequest;
 import com.citronix.dto.response.FieldResponse;
-import com.citronix.dto.response.TreeResponse;
 import com.citronix.entity.Field;
 import com.citronix.entity.Farm;
-import com.citronix.entity.Tree;
+import com.citronix.mapper.FieldMapper;
 import com.citronix.repository.FieldRepository;
 import com.citronix.repository.FarmRepository;
 import com.citronix.service.interfaces.FieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,23 +19,40 @@ public class FieldServiceImpl implements FieldService {
 
     private final FieldRepository fieldRepository;
     private final FarmRepository farmRepository;
+    private final FieldMapper fieldMapper;
 
     @Autowired
-    public FieldServiceImpl(FieldRepository fieldRepository, FarmRepository farmRepository) {
+    public FieldServiceImpl(FieldRepository fieldRepository, FarmRepository farmRepository, FieldMapper fieldMapper) {
         this.fieldRepository = fieldRepository;
         this.farmRepository = farmRepository;
+        this.fieldMapper = fieldMapper;
     }
+
 
     @Override
     public FieldResponse createField(FieldRequest request) {
+        if (request.getArea() < 0.1) {
+            throw new RuntimeException("Field area must be at least 0.1 units.");
+        }
+
         Farm farm = farmRepository.findById(request.getFarmId())
                 .orElseThrow(() -> new RuntimeException("Farm with ID " + request.getFarmId() + " not found"));
 
+        long currentFieldCount = fieldRepository.countByFarmId(farm.getId());
+        if (currentFieldCount >= 10) {
+            throw new RuntimeException("Farm cannot have more than 10 fields");
+        }
+
         double currentFieldArea = fieldRepository.sumFieldAreaByFarmId(farm.getId());
         double maxAllowedArea = farm.getArea() * 0.5;
+        double remainingArea = maxAllowedArea - currentFieldArea;
 
-        if (currentFieldArea + request.getArea() > maxAllowedArea) {
-            throw new RuntimeException("Adding this field would exceed the maximum allowed area for fields on this farm (" + maxAllowedArea + " units).");
+        if (request.getArea() > remainingArea) {
+            throw new RuntimeException(String.format(
+                    "Cannot add field. Remaining available area is %.2f units. Requested field area is %.2f units.",
+                    remainingArea,
+                    request.getArea()
+            ));
         }
 
         Field field = Field.builder()
@@ -46,24 +61,22 @@ public class FieldServiceImpl implements FieldService {
                 .build();
 
         Field savedField = fieldRepository.save(field);
-        return mapToResponse(savedField);
+        return fieldMapper.toDTO(savedField);
     }
-
-
 
     @Override
     public FieldResponse getFieldById(Long id) {
         Field field = fieldRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Field with ID " + id + " not found"));
 
-        return mapToResponse(field);
+        return fieldMapper.toDTO(field);
     }
 
     @Override
     public List<FieldResponse> getAllFields() {
         List<Field> fields = fieldRepository.findAll();
         return fields.stream()
-                .map(this::mapToResponse)
+                .map(fieldMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -79,7 +92,7 @@ public class FieldServiceImpl implements FieldService {
         existingField.setFarm(farm);
 
         Field updatedField = fieldRepository.save(existingField);
-        return mapToResponse(updatedField);
+        return fieldMapper.toDTO(updatedField);
     }
 
     @Override
@@ -89,22 +102,4 @@ public class FieldServiceImpl implements FieldService {
         }
         fieldRepository.deleteById(id);
     }
-
-    private FieldResponse mapToResponse(Field field) {
-        List<TreeResponse> treeResponses = (field.getTrees() != null)
-                ? field.getTrees().stream()
-                .map(tree -> new TreeResponse(tree.getId()))
-                .collect(Collectors.toList())
-                : Collections.emptyList();
-        return new FieldResponse(
-                field.getId(),
-                field.getArea(),
-                field.getFarm().getId(),
-                treeResponses
-        );
-    }
-
-
-
-
 }
