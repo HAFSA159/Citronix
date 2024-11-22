@@ -35,6 +35,14 @@ public class TreeServiceImpl implements TreeService {
         Field field = fieldRepository.findById(treeRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
+        long currentTreeCount = treeRepository.countByFieldId(field.getId());
+        double fieldAreaInHectares = field.getArea() / 10000.0;
+        double currentTreeDensity = currentTreeCount / fieldAreaInHectares;
+
+        if (currentTreeDensity >= 100) {
+            throw new RuntimeException("Maximum tree density of 100 trees per hectare exceeded");
+        }
+
         Tree tree = treeMapper.toEntity(treeRequest);
         tree.setField(field);
         Tree savedTree = treeRepository.save(tree);
