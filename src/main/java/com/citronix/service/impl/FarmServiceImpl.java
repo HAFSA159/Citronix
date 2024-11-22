@@ -4,6 +4,7 @@ import com.citronix.dto.request.FarmRequest;
 import com.citronix.dto.response.FarmResponse;
 import com.citronix.entity.Farm;
 import com.citronix.entity.enums.Season;
+import com.citronix.mapper.FarmMapper;
 import com.citronix.repository.FarmRepository;
 import com.citronix.service.interfaces.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ import java.util.stream.Collectors;
 public class FarmServiceImpl implements FarmService {
 
     private final FarmRepository farmRepository;
+    private final FarmMapper farmMapper;
 
     @Autowired
-    public FarmServiceImpl(FarmRepository farmRepository) {
+    public FarmServiceImpl(FarmRepository farmRepository, FarmMapper farmMapper) {
         this.farmRepository = farmRepository;
+        this.farmMapper = farmMapper;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class FarmServiceImpl implements FarmService {
                 .build();
 
         Farm savedFarm = farmRepository.save(farm);
-        return mapToResponse(savedFarm);
+        return farmMapper.toDTO(savedFarm);
     }
 
     @Override
@@ -41,14 +44,14 @@ public class FarmServiceImpl implements FarmService {
         Farm farm = farmRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Farm with ID " + id + " not found"));
 
-        return mapToResponse(farm);
+        return farmMapper.toDTO(farm);
     }
 
     @Override
     public List<FarmResponse> getAllFarms() {
         List<Farm> farms = farmRepository.findAll();
         return farms.stream()
-                .map(this::mapToResponse)
+                .map(farmMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +66,7 @@ public class FarmServiceImpl implements FarmService {
         existingFarm.setLocation(request.getLocation());
 
         Farm updatedFarm = farmRepository.save(existingFarm);
-        return mapToResponse(updatedFarm);
+        return farmMapper.toDTO(updatedFarm);
     }
 
     @Override
@@ -88,24 +91,5 @@ public class FarmServiceImpl implements FarmService {
         return 0;
     }
 
-    /*
-     @Override/* public double calculateTotalProductivity(Long farmId, Season season) {
-         Farm farm = farmRepository.findById(farmId)
-                 .orElseThrow(() -> new RuntimeException("Farm with ID " + farmId + " not found"));
 
-         return farm.getFields().stream()
-                 .filter(field -> field.getSeason() == season)
-                 .mapToDouble(field -> field.getProductivity())
-                 .sum();
-     }
- */
-    private FarmResponse mapToResponse(Farm farm) {
-        FarmResponse response = new FarmResponse();
-        response.setId(farm.getId());
-        response.setName(farm.getName());
-        response.setArea(farm.getArea());
-        response.setLocation(farm.getLocation());
-        response.setCreationDate(farm.getCreationDate());
-        return response;
-    }
 }

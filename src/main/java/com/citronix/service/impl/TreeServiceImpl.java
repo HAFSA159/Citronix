@@ -4,6 +4,7 @@ import com.citronix.dto.request.TreeRequest;
 import com.citronix.dto.response.TreeResponse;
 import com.citronix.entity.Tree;
 import com.citronix.entity.Field;
+import com.citronix.mapper.TreeMapper;
 import com.citronix.repository.TreeRepository;
 import com.citronix.repository.FieldRepository;
 import com.citronix.service.interfaces.TreeService;
@@ -20,11 +21,13 @@ public class TreeServiceImpl implements TreeService {
 
     private final TreeRepository treeRepository;
     private final FieldRepository fieldRepository;
+    private final TreeMapper treeMapper;
 
     @Autowired
-    public TreeServiceImpl(TreeRepository treeRepository, FieldRepository fieldRepository) {
+    public TreeServiceImpl(TreeRepository treeRepository, FieldRepository fieldRepository, TreeMapper treeMapper) {
         this.treeRepository = treeRepository;
         this.fieldRepository = fieldRepository;
+        this.treeMapper = treeMapper;
     }
 
     @Override
@@ -32,41 +35,40 @@ public class TreeServiceImpl implements TreeService {
         Field field = fieldRepository.findById(treeRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
-        Tree tree = new Tree(null, treeRequest.getPlantingDate(), field, null);
+        Tree tree = treeMapper.toEntity(treeRequest);
+        tree.setField(field);  // Ensure field is set
+        Tree savedTree = treeRepository.save(tree);
 
-        tree = treeRepository.save(tree);
-
-        return mapToResponse(tree);
+        return setTreeMetricsAndMapToResponse(savedTree);  // Set metrics and return response
     }
-
-
 
     @Override
     public TreeResponse findTreeById(Long id) {
         Tree tree = treeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tree not found"));
-        return mapToResponse(tree);
+        return setTreeMetricsAndMapToResponse(tree);
     }
 
     @Override
     public List<TreeResponse> getAllTrees() {
         List<Tree> trees = treeRepository.findAll();
         return trees.stream()
-                .map(this::mapToResponse)
+                .map(this::setTreeMetricsAndMapToResponse)
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public TreeResponse updateTree(Long id, TreeRequest treeRequest) {
         Tree tree = treeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tree not found"));
+
         tree.setPlantingDate(treeRequest.getPlantingDate());
         Field field = fieldRepository.findById(treeRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
         tree.setField(field);
         tree = treeRepository.save(tree);
-        return mapToResponse(tree);
+
+        return setTreeMetricsAndMapToResponse(tree);
     }
 
     @Override
@@ -78,19 +80,11 @@ public class TreeServiceImpl implements TreeService {
         return false;
     }
 
-    public int calculateTreeAge(Long treeId) {
-        Tree tree = treeRepository.findById(treeId)
-                .orElseThrow(() -> new RuntimeException("Tree not found"));
-
-        return calculateAge(tree.getPlantingDate());
-    }
-
     private int calculateAge(LocalDate plantingDate) {
         if (plantingDate == null) {
             return 0;
         }
         LocalDate currentDate = LocalDate.now();
-
         return Period.between(plantingDate, currentDate).getYears();
     }
 
@@ -104,19 +98,15 @@ public class TreeServiceImpl implements TreeService {
         }
     }
 
-
-
-    @Override
-    public TreeResponse mapToResponse(Tree tree) {
+    private TreeResponse setTreeMetricsAndMapToResponse(Tree tree) {
         int age = calculateAge(tree.getPlantingDate());
-        double productivity = calculateAnnualProductivity(age);
-        return new TreeResponse(
-                tree.getId(),
-                tree.getPlantingDate(),
-                age,
-                productivity
-        );
+        double annualProductivity = calculateAnnualProductivity(age);
+
+        // Map Tree to TreeResponse using TreeMapper, then set additional fields
+        TreeResponse response = treeMapper.toDTO(tree);
+        response.setAge(age);  // Set calculated age
+        response.setAnnualProductivity(annualProductivity);  // Set calculated productivity
+
+        return response;
     }
-
-
 }

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,13 +13,12 @@ public class TreeResponse {
     private Long id;
     private LocalDate plantingDate;
     private int age;
+    private Long fieldId;
     private double annualProductivity;
 
 
-    public TreeResponse(Long id) {
+    public TreeResponse(Long id ) {
         this.id = id;
-        this.plantingDate = null;
-        this.age = 0;
-        this.annualProductivity = 0;
+
     }
 }
