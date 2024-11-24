@@ -12,6 +12,8 @@ import com.citronix.service.interfaces.HarvestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,15 +31,32 @@ public class HarvestServiceImpl implements HarvestService {
         this.harvestMapper = harvestMapper;
     }
 
+    private Season determineSeason(LocalDate date) {
+        Month month = date.getMonth();
+        switch (month) {
+            case DECEMBER: case JANUARY: case FEBRUARY:
+                return Season.WINTER;
+            case MARCH: case APRIL: case MAY:
+                return Season.SPRING;
+            case JUNE: case JULY: case AUGUST:
+                return Season.SUMMER;
+            case SEPTEMBER: case OCTOBER: case NOVEMBER:
+                return Season.AUTUMN;
+            default:
+                throw new IllegalArgumentException("Invalid month: " + month);
+        }
+    }
 
     @Override
     public HarvestResponse createHarvest(HarvestRequest harvestRequest) {
         Field field = fieldRepository.findById(harvestRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
+        Season season = determineSeason(harvestRequest.getHarvestDate());
+
         Harvest harvest = Harvest.builder()
                 .harvestDate(harvestRequest.getHarvestDate())
-                .season(Season.valueOf(harvestRequest.getSeason().toUpperCase()))
+                .season(season)
                 .totalQuantity(harvestRequest.getTotalQuantity())
                 .field(field)
                 .build();
@@ -69,8 +88,10 @@ public class HarvestServiceImpl implements HarvestService {
         Field field = fieldRepository.findById(harvestRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
+        Season season = determineSeason(harvestRequest.getHarvestDate());
+
         harvest.setHarvestDate(harvestRequest.getHarvestDate());
-        harvest.setSeason(Season.valueOf(harvestRequest.getSeason().toUpperCase()));
+        harvest.setSeason(season);
         harvest.setTotalQuantity(harvestRequest.getTotalQuantity());
         harvest.setField(field);
 

@@ -35,12 +35,24 @@ public class TreeServiceImpl implements TreeService {
         Field field = fieldRepository.findById(treeRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
+        if (field.getArea() <= 0) {
+            throw new RuntimeException("Field area must be greater than 0");
+        }
+
         long currentTreeCount = treeRepository.countByFieldId(field.getId());
-        double fieldAreaInHectares = field.getArea() / 10000.0;
+        double fieldAreaInHectares = field.getArea() / 0.1;
+
+        System.out.println("Field ID: " + field.getId());
+        System.out.println("Current Tree Count: " + currentTreeCount);
+        System.out.println("Field Area (hectares): " + fieldAreaInHectares);
+
+
         double currentTreeDensity = currentTreeCount / fieldAreaInHectares;
 
+        System.out.println("Current Tree Density: " + currentTreeDensity);
+
         if (currentTreeDensity >= 100) {
-            throw new RuntimeException("Maximum tree density of 100 trees per hectare exceeded");
+            throw new RuntimeException("Maximum tree density of 100 trees per hectare exceeded for field ID: " + field.getId());
         }
 
         Tree tree = treeMapper.toEntity(treeRequest);
@@ -49,6 +61,7 @@ public class TreeServiceImpl implements TreeService {
 
         return setTreeMetricsAndMapToResponse(savedTree);
     }
+
 
     @Override
     public TreeResponse findTreeById(Long id) {
