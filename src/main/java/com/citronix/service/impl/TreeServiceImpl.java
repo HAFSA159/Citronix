@@ -4,6 +4,7 @@ import com.citronix.dto.request.TreeRequest;
 import com.citronix.dto.response.TreeResponse;
 import com.citronix.entity.Tree;
 import com.citronix.entity.Field;
+import com.citronix.exception.InvalidPlantingDateException;
 import com.citronix.mapper.TreeMapper;
 import com.citronix.repository.TreeRepository;
 import com.citronix.repository.FieldRepository;
@@ -30,8 +31,21 @@ public class TreeServiceImpl implements TreeService {
         this.treeMapper = treeMapper;
     }
 
+    private void validatePlantingDate(LocalDate plantingDate) {
+        if (plantingDate == null) {
+            throw new InvalidPlantingDateException("Planting date cannot be null.");
+        }
+
+        int plantingMonth = plantingDate.getMonthValue();
+        if (plantingMonth < 3 || plantingMonth > 5) {
+            throw new InvalidPlantingDateException("Planting is only allowed in March, April, and May.");
+        }
+    }
+
     @Override
     public TreeResponse createTree(TreeRequest treeRequest) {
+        validatePlantingDate(treeRequest.getPlantingDate());
+
         Field field = fieldRepository.findById(treeRequest.getFieldId())
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
@@ -61,6 +75,7 @@ public class TreeServiceImpl implements TreeService {
 
         return setTreeMetricsAndMapToResponse(savedTree);
     }
+
 
 
     @Override
