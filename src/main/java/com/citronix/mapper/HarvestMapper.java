@@ -11,6 +11,7 @@ import org.mapstruct.Named;
 public interface HarvestMapper {
 
     @Mapping(target = "season", source = "season", qualifiedByName = "seasonToString")
+    @Mapping(source = "field.id", target = "fieldId")
     HarvestResponse toDTO(Harvest harvest);
 
     @Named("seasonToString")

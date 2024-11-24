@@ -51,19 +51,21 @@ public class HarvestServiceImpl implements HarvestService {
     @Override
     public HarvestResponse createHarvest(HarvestRequest harvestRequest) {
         Field field = fieldRepository.findById(harvestRequest.getFieldId())
-                .orElseThrow(() -> new RuntimeException("Field not found"));
+                .orElseThrow(() -> new RuntimeException("Field with ID " + harvestRequest.getFieldId() + " not found."));
 
         Season season = determineSeason(harvestRequest.getHarvestDate());
 
         boolean harvestExists = harvestRepository.existsByFieldAndSeason(field, season);
         if (harvestExists) {
-            throw new RuntimeException("A harvest has already been performed for this field in the " + season + " season.");
+            throw new RuntimeException(
+                    "A harvest already exists for the field (ID: " + field.getId() + ") in the " + season + " season."
+            );
         }
 
         Harvest harvest = Harvest.builder()
                 .harvestDate(harvestRequest.getHarvestDate())
                 .season(season)
-                .totalQuantity(harvestRequest.getTotalQuantity())
+                .totalQuantity(0.0)
                 .field(field)
                 .build();
 
@@ -71,6 +73,7 @@ public class HarvestServiceImpl implements HarvestService {
 
         return harvestMapper.toDTO(harvest);
     }
+
 
 
     @Override
@@ -99,7 +102,6 @@ public class HarvestServiceImpl implements HarvestService {
 
         harvest.setHarvestDate(harvestRequest.getHarvestDate());
         harvest.setSeason(season);
-        harvest.setTotalQuantity(harvestRequest.getTotalQuantity());
         harvest.setField(field);
 
         harvest = harvestRepository.save(harvest);

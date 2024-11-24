@@ -5,6 +5,7 @@ import com.citronix.dto.response.HarvestDetailResponse;
 import com.citronix.entity.Harvest;
 import com.citronix.entity.HarvestDetail;
 import com.citronix.entity.Tree;
+import com.citronix.mapper.HarvestDetailMapper;
 import com.citronix.repository.HarvestDetailRepository;
 import com.citronix.repository.HarvestRepository;
 import com.citronix.repository.TreeRepository;
@@ -20,27 +21,27 @@ public class HarvestDetailServiceImpl implements HarvestDetailService {
     private final HarvestDetailRepository harvestDetailRepository;
     private final HarvestRepository harvestRepository;
     private final TreeRepository treeRepository;
+    private final HarvestDetailMapper harvestDetailMapper;
 
-    public HarvestDetailServiceImpl(HarvestDetailRepository harvestDetailRepository,
-                                    HarvestRepository harvestRepository,
-                                    TreeRepository treeRepository) {
+    public HarvestDetailServiceImpl(HarvestDetailRepository harvestDetailRepository, HarvestRepository harvestRepository, TreeRepository treeRepository, HarvestDetailMapper harvestDetailMapper) {
         this.harvestDetailRepository = harvestDetailRepository;
         this.harvestRepository = harvestRepository;
         this.treeRepository = treeRepository;
+        this.harvestDetailMapper = harvestDetailMapper;
     }
 
     @Override
     public HarvestDetailResponse findById(Long id) {
         HarvestDetail harvestDetail = harvestDetailRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("HarvestDetail not found"));
-        return mapToResponse(harvestDetail);
+        return harvestDetailMapper.toDTO(harvestDetail);
     }
 
     @Override
     public List<HarvestDetailResponse> findAll() {
         List<HarvestDetail> harvestDetails = harvestDetailRepository.findAll();
         return harvestDetails.stream()
-                .map(this::mapToResponse)
+                .map(harvestDetailMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -50,14 +51,22 @@ public class HarvestDetailServiceImpl implements HarvestDetailService {
                 .orElseThrow(() -> new RuntimeException("Harvest not found"));
         Tree tree = treeRepository.findById(request.getTreeId())
                 .orElseThrow(() -> new RuntimeException("Tree not found"));
-        HarvestDetail harvestDetail = new HarvestDetail(null, request.getQuantity(), harvest, tree);
+
+        HarvestDetail harvestDetail = harvestDetailMapper.toEntity(
+                HarvestDetailResponse.builder()
+                        .quantity(request.getQuantity())
+                        .harvestId(harvest.getId())
+                        .treeId(tree.getId())
+                        .build()
+        );
+
         harvestDetail = harvestDetailRepository.save(harvestDetail);
-        return mapToResponse(harvestDetail);
+        return harvestDetailMapper.toDTO(harvestDetail);
     }
 
     @Override
     public HarvestDetailResponse update(Long id, HarvestDetailRequest request) {
-        HarvestDetail harvestDetail = harvestDetailRepository.findById(id)
+        HarvestDetail existingHarvestDetail = harvestDetailRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("HarvestDetail not found"));
 
         Harvest harvest = harvestRepository.findById(request.getHarvestId())
@@ -65,12 +74,17 @@ public class HarvestDetailServiceImpl implements HarvestDetailService {
         Tree tree = treeRepository.findById(request.getTreeId())
                 .orElseThrow(() -> new RuntimeException("Tree not found"));
 
-        harvestDetail.setQuantity(request.getQuantity());
-        harvestDetail.setHarvest(harvest);
-        harvestDetail.setTree(tree);
+        HarvestDetailResponse updatedHarvestDetailDTO = HarvestDetailResponse.builder()
+                .id(existingHarvestDetail.getId())
+                .quantity(request.getQuantity())
+                .harvestId(harvest.getId())
+                .treeId(tree.getId())
+                .build();
 
-        harvestDetail = harvestDetailRepository.save(harvestDetail);
-        return mapToResponse(harvestDetail);
+        harvestDetailMapper.updateEntityFromDTO(updatedHarvestDetailDTO, existingHarvestDetail);
+
+        HarvestDetail updatedHarvestDetail = harvestDetailRepository.save(existingHarvestDetail);
+        return harvestDetailMapper.toDTO(updatedHarvestDetail);
     }
 
     @Override
@@ -80,14 +94,5 @@ public class HarvestDetailServiceImpl implements HarvestDetailService {
             return true;
         }
         return false;
-    }
-
-    private HarvestDetailResponse mapToResponse(HarvestDetail harvestDetail) {
-        return HarvestDetailResponse.builder()
-                .id(harvestDetail.getId())
-                .quantity(harvestDetail.getQuantity())
-                .harvestId(harvestDetail.getHarvest().getId())
-                .treeId(harvestDetail.getTree().getId())
-                .build();
     }
 }
