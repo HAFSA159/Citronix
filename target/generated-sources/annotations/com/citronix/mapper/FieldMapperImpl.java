@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-22T12:18:19+0100",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
+    date = "2024-11-26T13:32:34+0100",
+    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 1.8.0_422-422 (OpenLogic-OpenJDK)"
 )
 @Component
 public class FieldMapperImpl implements FieldMapper {

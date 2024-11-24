@@ -13,7 +13,5 @@ public class HarvestRequest {
     @PastOrPresent(message = "Date must not be in the future")
     private LocalDate harvestDate;
 
-    @NotNull(message = "Field ID is required")
-    private Long fieldId;
 }
 

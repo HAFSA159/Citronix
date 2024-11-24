@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HarvestRepository extends JpaRepository<Harvest, Long> {
-    boolean existsByFieldAndSeason(Field field, Season season);
 
 }

@@ -1,6 +1,7 @@
 package com.citronix.dto.request;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

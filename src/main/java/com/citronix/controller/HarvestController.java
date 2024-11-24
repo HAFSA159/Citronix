@@ -1,6 +1,7 @@
 package com.citronix.controller;
 
 import com.citronix.dto.request.HarvestRequest;
+import com.citronix.dto.response.FarmResponse;
 import com.citronix.dto.response.HarvestResponse;
 import com.citronix.service.interfaces.HarvestService;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,12 @@ public class HarvestController {
     public ResponseEntity<List<HarvestResponse>> getAllHarvests() {
         return ResponseEntity.ok(harvestService.findAllHarvests());
     }
+
+    @GetMapping("/winter")
+    public ResponseEntity<List<FarmResponse>> getFarmsHarvestedInWinter() {
+        return ResponseEntity.ok(harvestService.getFarmsHarvestedInWinter());
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<HarvestResponse> getHarvestById(@PathVariable Long id) {

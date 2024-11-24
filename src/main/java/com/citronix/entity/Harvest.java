@@ -35,11 +35,6 @@ import java.util.List;
         @Column(name = "total_quantity", nullable = false)
         private Double totalQuantity;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "field_id", nullable = false)
-        private Field field;
-
-
         @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<HarvestDetail> harvestDetails;
 

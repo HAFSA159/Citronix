@@ -10,4 +10,6 @@ public class FarmResponse {
     private Double area;
     private String location;
     private LocalDate creationDate;
+
+
 }
