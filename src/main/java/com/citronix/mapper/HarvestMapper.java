@@ -1,22 +1,20 @@
 package com.citronix.mapper;
 
-
 import com.citronix.dto.response.HarvestResponse;
 import com.citronix.entity.Harvest;
+import com.citronix.entity.enums.Season;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
-@Component
 public interface HarvestMapper {
-    @Mapping(source = "field.id", target = "fieldId")  // Mapping field ID correctly
+
+    @Mapping(target = "season", source = "season", qualifiedByName = "seasonToString")
     HarvestResponse toDTO(Harvest harvest);
 
-    @Mapping(target = "field.id", source = "fieldId")  // Reverse mapping to set the field object from fieldId
-    Harvest toEntity(HarvestResponse harvestDTO);
-
-    @Mapping(target = "id", ignore = true)
-    void updateEntityFromDTO(HarvestResponse harvestDTO, @MappingTarget Harvest harvest);
+    @Named("seasonToString")
+    default String mapSeasonToString(Season season) {
+        return season != null ? season.name() : null;
+    }
 }
