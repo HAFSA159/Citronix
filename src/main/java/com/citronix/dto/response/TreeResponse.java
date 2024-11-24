@@ -15,10 +15,6 @@ public class TreeResponse {
     private int age;
     private Long fieldId;
     private double annualProductivity;
+    private String statusMessage;
 
-
-    public TreeResponse(Long id ) {
-        this.id = id;
-
-    }
 }

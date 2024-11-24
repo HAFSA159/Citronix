@@ -114,8 +114,10 @@ public class TreeServiceImpl implements TreeService {
             return 2.5 * 4;
         } else if (age <= 10) {
             return 12.0 * 4;
-        } else {
+        } else if(age <= 20){
             return 20.0 * 4;
+        }else{
+            return 0.0;
         }
     }
 
@@ -127,6 +129,11 @@ public class TreeServiceImpl implements TreeService {
         response.setAge(age);
         response.setAnnualProductivity(annualProductivity);
 
+        String statusMessage = (annualProductivity > 0) ? "Tree is productive" : "Tree is non-productive due to age";
+        response.setStatusMessage(statusMessage);
+
         return response;
     }
+
+
 }
