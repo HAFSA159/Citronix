@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 public interface FieldMapper {
 
-    @Mapping(source = "farm.id", target = "farmId")  // Ensure the farm.id is mapped to farmId in the response
+    @Mapping(source = "farm.id", target = "farmId")
     FieldResponse toDTO(Field field);
 
-    @Mapping(source = "farmId", target = "farm.id")  // Map farmId to farm.id when converting to entity
+    @Mapping(source = "farmId", target = "farm.id")
     Field toEntity(FieldRequest fieldRequest);
 
-    @Mapping(target = "id", ignore = true)  // Ignore the ID during updates
+    @Mapping(target = "id", ignore = true)
     void updateEntityFromDTO(FieldResponse fieldResponse, @MappingTarget Field field);
 }

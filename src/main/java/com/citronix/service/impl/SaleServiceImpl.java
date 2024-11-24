@@ -7,6 +7,7 @@ import com.citronix.entity.Harvest;
 import com.citronix.repository.SaleRepository;
 import com.citronix.repository.HarvestRepository;
 import com.citronix.service.interfaces.SaleService;
+import com.citronix.mapper.SaleMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,23 +18,27 @@ public class SaleServiceImpl implements SaleService {
 
     private final SaleRepository saleRepository;
     private final HarvestRepository harvestRepository;
+    private final SaleMapper saleMapper;
 
-    public SaleServiceImpl(SaleRepository saleRepository, HarvestRepository harvestRepository) {
+    public SaleServiceImpl(SaleRepository saleRepository, HarvestRepository harvestRepository, SaleMapper saleMapper) {
         this.saleRepository = saleRepository;
         this.harvestRepository = harvestRepository;
+        this.saleMapper = saleMapper;
     }
 
     @Override
     public SaleResponse findSaleById(Long id) {
         Sale sale = saleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sale not found"));
-        return mapToResponse(sale);
+        return saleMapper.toDTO(sale);
     }
 
     @Override
     public List<SaleResponse> findAllSales() {
         List<Sale> sales = saleRepository.findAll();
-        return sales.stream().map(this::mapToResponse).collect(Collectors.toList());
+        return sales.stream()
+                .map(saleMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -50,7 +55,7 @@ public class SaleServiceImpl implements SaleService {
                 .build();
 
         sale = saleRepository.save(sale);
-        return mapToResponse(sale);
+        return saleMapper.toDTO(sale);
     }
 
     @Override
@@ -68,7 +73,7 @@ public class SaleServiceImpl implements SaleService {
         sale.setHarvest(harvest);
 
         sale = saleRepository.save(sale);
-        return mapToResponse(sale);
+        return saleMapper.toDTO(sale);
     }
 
     @Override
@@ -79,17 +84,4 @@ public class SaleServiceImpl implements SaleService {
         }
         return false;
     }
-
-    private SaleResponse mapToResponse(Sale sale) {
-        return SaleResponse.builder()
-                .id(sale.getId())
-                .saleDate(sale.getSaleDate())
-                .unitPrice(sale.getUnitPrice())
-                .quantity(sale.getQuantity())
-                .clientName(sale.getClientName())
-                .totalRevenue(sale.getTotalRevenue())
-                .harvestId(sale.getHarvest().getId())
-                .build();
-    }
-
 }
